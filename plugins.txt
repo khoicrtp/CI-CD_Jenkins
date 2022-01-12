@@ -1,0 +1,5 @@
+git
+github
+build-pipeline-plugin
+Parameterized-Remote-Trigger
+authentication-tokens
