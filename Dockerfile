@@ -39,5 +39,6 @@ RUN yum install -y docker-ce-cli --nobest
 RUN echo -e "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # add jenkins user to docker group
+RUN pip install -r requirements.txt
 
 RUN usermod -aG docker jenkins
