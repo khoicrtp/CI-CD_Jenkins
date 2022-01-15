@@ -1,0 +1,2 @@
+docker build . -t test4
+docker run -p 5000:5000 -t -i test4:latest
