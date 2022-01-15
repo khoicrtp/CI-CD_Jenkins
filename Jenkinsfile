@@ -1,10 +1,45 @@
-def JD_IMAGE
-node {
-    checkout scm
-    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-        JD_IMAGE="khoicrtp/jenkins"
-        def customImage = docker.build("khoicrtp/jenkins")
-        /* Push the container to the custom Registry */
-        customImage.push()
+pipeline{
+
+	agent {label 'linux'}
+
+	environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	}
+
+	stages {
+	    
+	    stage('gitclone') {
+
+			steps {
+				git 'https://github.com/khoicrtp/jenkins'
+			}
+		}
+
+		stage('Build') {
+
+			steps {
+				sh 'docker build -t khoicrtp/jenkins:latest .'
+			}
+		}
+
+		stage('Login') {
+
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+
+		stage('Push') {
+
+			steps {
+				sh 'docker push khoicrtp/jenkins:latest'
+			}
+		}
+	}
+
+	post {
+		always {
+			sh 'docker logout'
+		}
 	}
 }
