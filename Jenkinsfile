@@ -28,19 +28,13 @@ pipeline{
 				bat 'echo docker login -u %DOCKERHUB_CREDENTIALS_USR% -p %DOCKERHUB_CREDENTIALS_PSW%'
 			}
 		}
-        stage('Push image') {
+        stage('Push') {
             steps{
-            withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
-            bat "docker push khoicrtp/jenkins:latest"
-            }
+                withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+                    bat "docker push khoicrtp/jenkins:latest"
+                }
             }
         }
-// 		stage('Push') {
-
-// 			steps {
-// 				bat 'docker push khoicrtp/jenkins:latest'
-// 			}
-// 		}
 	}
 
 	post {
