@@ -1,9 +1,9 @@
 pipeline{
 
-	agent {label 'linux'}
+	agent {label 'defaultnode'}
 
 	environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+		DOCKERHUB_CREDENTIALS=credentials('dockeraccount')
 	}
 
 	stages {
@@ -18,28 +18,34 @@ pipeline{
 		stage('Build') {
 
 			steps {
-				sh 'docker build -t khoicrtp/jenkins:latest .'
+				bat 'docker build -t khoicrtp/jenkins:latest .'
 			}
 		}
 
 		stage('Login') {
-
 			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+				//bat 'echo winpty %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR%'
+				bat 'echo docker login -u %DOCKERHUB_CREDENTIALS_USR% -p %DOCKERHUB_CREDENTIALS_PSW%'
 			}
 		}
+        stage('Push image') {
+            steps{
+            withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+            bat "docker push khoicrtp/jenkins:latest"
+            }
+            }
+        }
+// 		stage('Push') {
 
-		stage('Push') {
-
-			steps {
-				sh 'docker push khoicrtp/jenkins:latest'
-			}
-		}
+// 			steps {
+// 				bat 'docker push khoicrtp/jenkins:latest'
+// 			}
+// 		}
 	}
 
 	post {
 		always {
-			sh 'docker logout'
+			bat 'docker logout'
 		}
 	}
 }
