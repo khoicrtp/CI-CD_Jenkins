@@ -4,11 +4,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def welcome():
-    return 'Hello World!\n'
+    return 'Hello World !\n'
 
 @app.route('/helloworld/')
 def hello_world():
-    return 'Hello World!\n'
+    return 'Hello World !\n'
 
 @app.route('/<username>') # dynamic route
 def hello_user(username):
