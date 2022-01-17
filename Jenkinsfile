@@ -7,8 +7,7 @@ pipeline{
 	}
 
 	stages {
-	    
-	    stage('gitclone') {
+	    stage('Clone') {
 
 			steps {
 				git 'https://github.com/khoicrtp/jenkins'
