@@ -14,8 +14,12 @@ pipeline{
 	stages {
 	    stage('Pre'){
 	        steps {
-                bat 'docker rm -f %containerName%'
-				bat 'docker image rm %imageName%'
+				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                	bat 'docker rm -f %containerName%'
+				}
+				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+					bat 'docker image rm %imageName%'
+				}
 	        }
 	    }
 	    stage('Clone') {
