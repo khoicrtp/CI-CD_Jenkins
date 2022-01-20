@@ -1,12 +1,23 @@
 pipeline{
-
+    options {
+    disableConcurrentBuilds(abortPrevious: true)
+    }
+    
 	agent {label 'defaultnode'}
-
+    
 	environment {
 		DOCKERHUB_CREDENTIALS=credentials('dockeraccount')
+        imageName='khoicrtp/jenkins:latest'
+        containerName='jenkinscontainertest'
 	}
 
 	stages {
+	    stage('Pre'){
+	        steps {
+                bat 'docker rm -f %containerName%'
+				bat 'docker image rm %imageName%'
+	        }
+	    }
 	    stage('Clone') {
 
 			steps {
@@ -29,9 +40,14 @@ pipeline{
 		}
         stage('Push') {
             steps{
-                withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+                withDockerRegistry([ credentialsId: "dockeraccount", url: "" ]) {
                     bat "docker push khoicrtp/jenkins:latest"
                 }
+            }
+        }
+        stage('Deploy'){
+            steps{
+				bat 'docker run -p 5000:5000 --name %containerName% khoicrtp/jenkins:latest'
             }
         }
 	}
