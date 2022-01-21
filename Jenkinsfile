@@ -8,7 +8,7 @@ pipeline{
 	environment {
 		DOCKERHUB_CREDENTIALS=credentials('dockeraccount')
         imageName='khoicrtp/jenkins:latest'
-        containerName='jenkinscontainertest'
+        containerName='jenkinscontainer'
 	}
 
 	stages {
